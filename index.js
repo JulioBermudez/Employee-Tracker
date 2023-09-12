@@ -28,7 +28,7 @@ function userPrompt() {
           "Add Role",
           "Delete Departments",
           "Delete Roles",
-          // Delete Employees",
+          "Delete Employees",
           // "View Total Budget of a department",
           "Quit",
         ],
@@ -66,6 +66,8 @@ function userPrompt() {
         deleteDepartment();
       } else if (response.menu === "Delete Roles") {
         deleteRoles();
+      } else if (response.menu === "Delete Employees") {
+        deleteEmployees();
         // } else if (response.menu === "View Total Budget of a department") {
         //   addRole();
       } else if (response.menu === "Quit") {
@@ -322,23 +324,44 @@ function deleteDepartment() {
 }
 
 function deleteRoles() {
-  db.query("SELECT * FROM role", (err, roleData) => {
+  db.query("SELECT id AS value, title as name FROM role", (err, roleData) => {
     inquirer
       .prompt({
         type: "list",
-        message: "Select the role to Delete",
-        name: "role",
+        message: "Select the role to delete",
+        name: "roleName",
         choices: roleData,
       })
       .then((answer) => {
-        db.query(
-          `DELETE FROM role WHERE title = "${answer.role}"`,
-          (err) => {
-            viewAllRole();
-          }
-        );
+        db.query(`DELETE FROM role WHERE id = "${answer.roleName}"`, (err) => {
+          viewAllRole();
+        });
       });
   });
+}
+
+function deleteEmployees() {
+  db.query(
+    "SELECT id AS value, CONCAT(first_name, ' ',last_name) AS name FROM employee",
+    (err, employeeData) => {
+      inquirer
+        .prompt({
+          type: "list",
+          message: "Select the employee to delete",
+          name: "employeeName",
+          choices: employeeData,
+        })
+        .then((answer) => {
+          db.query(
+            `DELETE FROM employee WHERE id = "${answer.employeeName}"`,
+            (err) => {
+              
+              viewAllEmployee();
+            }
+          );
+        });
+    }
+  );
 }
 
 function quit() {

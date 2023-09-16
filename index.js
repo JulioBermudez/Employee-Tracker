@@ -29,47 +29,44 @@ function userPrompt() {
           "Delete Departments",
           "Delete Roles",
           "Delete Employees",
-          // "View Total Budget of a department",
           "Quit",
         ],
       },
     ])
     .then((response) => {
       if (response.menu === "View All Employees") {
-        console.log("All Employees");
+        
         viewAllEmployee();
       } else if (response.menu === "View All Departments") {
-        console.log("All Departments");
+        
         viewAllDepartment();
       } else if (response.menu === "View All Roles") {
-        console.log("View All Roles");
+        
         viewAllRole();
       } else if (response.menu === "View Employee By Department") {
         viewEmployeeByDepartment();
       } else if (response.menu === "Update Employee Role") {
-        console.log("Update Employee Role");
+        
         updateEmployeeRole();
       } else if (response.menu === "Update employees Manager") {
-        console.log("Update Employee Manager");
+        
         updateEmployeeManager();
       } else if (response.menu === "Add Employee") {
-        console.log("Add Employee");
+        
         addEmployee();
       } else if (response.menu === "Add Departments") {
-        console.log("Add Departments");
+        
         addDepartments();
       } else if (response.menu === "Add Role") {
-        console.log("Add Role");
+        
         addRole();
       } else if (response.menu === "Delete Departments") {
-        console.log("Delete Departments");
+        
         deleteDepartment();
       } else if (response.menu === "Delete Roles") {
         deleteRoles();
       } else if (response.menu === "Delete Employees") {
         deleteEmployees();
-        // } else if (response.menu === "View Total Budget of a department") {
-        //   addRole();
       } else if (response.menu === "Quit") {
         quit();
       }
@@ -123,12 +120,12 @@ function updateEmployeeRole() {
             {
               type: "list",
               message: "Choose the following title",
-              name: "role_id",
+              name: "title_id",
               choices: roleData,
             },
             {
               type: "list",
-              message: "Choose the following Manager",
+              message: "Choose the following Employee",
               name: "employee_id",
               choices: employeeData,
             },
@@ -136,7 +133,7 @@ function updateEmployeeRole() {
           .then((answer) => {
             db.query(
               "Update employee SET role_id = ? WHERE id = ?",
-              [answer.role_id, answer.id],
+              [answer.title_id, answer.employee_id],
               (err) => {
                 viewAllEmployee();
                 userPrompt();
@@ -266,7 +263,7 @@ function addRole() {
       .prompt([
         {
           type: "input",
-          message: "What is the name of the Role?",
+          message: "What is the title of the Role?",
           name: "role",
           validate: (role) => {
             if (role) {
@@ -303,6 +300,7 @@ function addRole() {
       });
   });
 }
+
 function deleteDepartment() {
   db.query("SELECT * FROM department", (err, departmentData) => {
     inquirer
@@ -355,7 +353,6 @@ function deleteEmployees() {
           db.query(
             `DELETE FROM employee WHERE id = "${answer.employeeName}"`,
             (err) => {
-              
               viewAllEmployee();
             }
           );
